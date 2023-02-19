@@ -1,0 +1,23 @@
+{
+  "name": "alienware-arena-fix",
+  "version": "0.1.0",
+  "description": "Proxy to attempt fixing Twitch Quests on Alienware Arena",
+  "main": "api/proxy.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jkmartindale/alienware-arena-fix.git"
+  },
+  "author": "James Martindale",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jkmartindale/alienware-arena-fix/issues"
+  },
+  "dependencies": {
+    "@vercel/node": "^2.9.6",
+    "axios": "^0.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.14",
+    "typescript": "^4.5.4"
+  }
+}
