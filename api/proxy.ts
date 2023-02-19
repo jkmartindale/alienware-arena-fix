@@ -1,5 +1,5 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
-import axios, { AxiosRequestHeaders } from 'axios';
+import { VercelRequest, VercelResponse } from '@vercel/node'
+import axios, { AxiosRequestHeaders } from 'axios'
 
 export default async (req: VercelRequest, res: VercelResponse) => {
     // Make CORS happy
@@ -8,7 +8,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         .setHeader("Access-Control-Allow-Methods", "GET")
         .setHeader("Access-Control-Allow-Headers", "x-extension-jwt, x-extension-channel")
 
-    // // Preflight requests
+    // Preflight requests
     if (req.method == "OPTIONS") {
         res.status(204).send("")
         return
@@ -22,7 +22,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     const url = req.query['url'] as string
     try {
         const host = new URL(url).host
-        if (host != "www.alienwarearena.com") {
+        if (host != "www.alienwarearena.com" && host != "ehc5ey5g9hoehi8ys54lr6eknomqgr.ext-twitch.tv") {
             res.status(403).send("Unsupported URL.")
             return
         }
@@ -32,7 +32,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     }
 
     // Set up headers for proxied request
-    let headers: AxiosRequestHeaders = {};
+    let headers: AxiosRequestHeaders = {}
     for (const key in req.headers) {
         if (key.startsWith("x-forwarded") || key.startsWith("x-vercel") || key == "x-real-ip" || key == "host") {
             continue
@@ -45,12 +45,12 @@ export default async (req: VercelRequest, res: VercelResponse) => {
         const response = await axios.get(url, {
             headers: headers,
             validateStatus: (_) => true,
-        });
+        })
         res.status(response.status).send(response.data)
         return
     } catch (error) {
-        console.error(error);
+        console.error(error)
         res.status(500).send('An error occurred while fetching data.')
         return
     }
-};
+}

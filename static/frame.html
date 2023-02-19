@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link href="http://localhost:3000/static/css/tailwind.min.css" rel="stylesheet">
+    <link href="http://localhost:3000/static/css/main.css" rel="stylesheet">
+    <script src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js"></script>
+    <title>Alienware Arena
+    </title>
+</head>
+
+<body class="bg-black">
+    <div class="bg-indigo-900 text-center py-4 lg:px-4">
+        <div class="p-2 bg-indigo-800 items-center text-indigo-100 leading-none lg:rounded-full flex lg:inline-flex"
+            role="alert">
+            <span class="flex rounded-full bg-indigo-500 uppercase px-2 py-1 text-xs font-bold mr-3"><img
+                    src="http://localhost:3000/static/img/alienware.png" class="object-contain alienhead"></span>
+            <span id="streamer_online" class="font-semibold mr-2 text-left flex-auto hidden state">
+                Hooray! You’re currently earning ARP the easy way!
+            </span>
+            <span id="streamer_offline" class="font-semibold mr-2 text-left flex-auto hidden state">
+                Looks like the streamer is offline. Come back later or check the active listings on Alienware Arena to
+                earn ARP.
+            </span>
+            <span id="grant_permission" class="font-semibold mr-2 text-left flex-auto hidden state">
+                To start earning ARP, please grant us permission by clicking on the button down below and make sure your
+                Alienware Arena account is also connected.
+                <div class="arrow-container bounce">
+                    <div class="arrow"></div>
+                </div>
+            </span>
+            <span id="daily_cap_reached" class="font-semibold mr-2 text-left flex-auto hidden state">
+                You have reached the daily maximum ARP awarded for watching official Alienware Arena Twitch channels.
+                Come back tomorrow!
+            </span>
+            <span id="no_channel_found" class="font-semibold mr-2 text-left flex-auto hidden state">
+                We appreciate your interest in Alienware Arena on Twitch! Unfortunately, your channel isn't configured
+                for this extension.
+            </span>
+            <span id="logged_out" class="font-semibold mr-2 text-left flex-auto state">
+                <a href="https://www.alienwarearena.com/steam/questsetup" target="_blank">Click here to
+                    login to Alienware Arena and start earning ARP.</a>
+            </span>
+        </div>
+    </div>
+    <script src="http://localhost:3000/static/js/rewards-tracker.js"></script>
+</body>
