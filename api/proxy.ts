@@ -1,56 +1,65 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
-import axios, { AxiosRequestHeaders } from 'axios';
+export const config = {
+    runtime: "edge"
+}
 
-export default async (req: VercelRequest, res: VercelResponse) => {
-    // Make CORS happy
-    res
-        .setHeader("Access-Control-Allow-Origin", "*")
-        .setHeader("Access-Control-Allow-Methods", "GET")
-        .setHeader("Access-Control-Allow-Headers", "x-extension-jwt, x-extension-channel")
+function baseHeaders() {
+    return {
+        "Content-Type": "application.json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET",
+        "Access-Control-Allow-Headers": "x-extension-jwt, x-extension-channel",
+    }
+}
 
-    // // Preflight requests
-    if (req.method == "OPTIONS") {
-        res.status(204).send("")
-        return
+function errorResponse(status: number, error: string): Response {
+    return new Response(JSON.stringify({ error }), {
+        status,
+        headers: baseHeaders()
+    })
+}
+
+export async function OPTIONS(request: Request): Promise<Response> {
+    return new Response(null, {
+        status: 204,
+        headers: baseHeaders()
+    })
+}
+
+export async function GET(request: Request): Promise<Response> {
+    let urlParameter = (new URL(request.url)).searchParams.get("url")
+    if (!urlParameter) {
+        return errorResponse(400, "URL parameter missing.")
     }
 
-    // Restrict to just Alienware Arena URls
-    if (!req.query['url']) {
-        res.status(400).send("URL parameter missing.")
-        return
-    }
-    const url = req.query['url'] as string
+    // Restrict to just Alienware Arena URLs
+    let url: URL
     try {
-        const host = new URL(url).host
-        if (host != "www.alienwarearena.com") {
-            res.status(403).send("Unsupported URL.")
-            return
-        }
+        url = new URL(urlParameter)
     } catch {
-        res.status(400).send("Invalid URL.")
-        return
+        return errorResponse(400, "Invalid URL.")
+    }
+    if (url.host != "www.alienwarearena.com") {
+        return errorResponse(403, "Unsupported URL.")
     }
 
-    // Set up headers for proxied request
-    let headers: AxiosRequestHeaders = {};
-    for (const key in req.headers) {
+    // Strip Vercel headers
+    const headers = new Headers()
+    for (const [ key, value ] of request.headers.entries()) {
         if (key.startsWith("x-forwarded") || key.startsWith("x-vercel") || key == "x-real-ip" || key == "host") {
             continue
         }
-        headers[key] = req.headers[key] as string
+        headers.append(key, value)
     }
 
     // Proxy request
     try {
-        const response = await axios.get(url, {
-            headers: headers,
-            validateStatus: (_) => true,
-        });
-        res.status(response.status).send(response.data)
-        return
+        const { body, status} = await fetch(url, { headers })
+        return new Response(body, {
+            status,
+            headers: baseHeaders(),
+        })
     } catch (error) {
-        console.error(error);
-        res.status(500).send('An error occurred while fetching data.')
-        return
+        console.error(error)
+        return errorResponse(500, "An error occurred while communicating with Alienware Arena.")
     }
-};
+}
