@@ -1,0 +1,6 @@
+name = "awa-twitch-proxy"
+main = "./proxy.ts"
+compatibility_date = "2024-09-25"
+routes = [
+  { pattern = "alienware.jkmartindale.dev", custom_domain = true }
+]
