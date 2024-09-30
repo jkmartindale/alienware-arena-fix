@@ -27,9 +27,11 @@ export default {
 
         // Proxy request
         try {
-            const { body, status} = await fetch(url, { headers: request.headers })
+            const response = await fetch(url, { headers: request.headers })
+            const body = await response.text()
+            console.log(JSON.parse(body))
             return new Response(body, {
-                status,
+                status: response.status,
                 headers: baseHeaders(),
             })
         } catch (error) {
