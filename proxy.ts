@@ -29,7 +29,12 @@ export default {
         try {
             const response = await fetch(url, { headers: request.headers })
             const body = await response.text()
-            console.log(JSON.parse(body))
+            try {
+                console.log(JSON.parse(body))
+            } catch {
+                console.log(body)
+            }
+
             return new Response(body, {
                 status: response.status,
                 headers: baseHeaders(),
