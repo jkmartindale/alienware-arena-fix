@@ -42,13 +42,14 @@ export default {
                 logger.info(body)
                 axiom.ingest("alienware-arena-proxy", { body })
             }
-
+            await axiom.flush()
             return new Response(body, {
                 status: response.status,
                 headers: baseHeaders(),
             })
         } catch (error) {
             logger.error(error)
+            await axiom.flush()
             return errorResponse(500, "An error occurred while communicating with Alienware Arena.")
         }
     },
