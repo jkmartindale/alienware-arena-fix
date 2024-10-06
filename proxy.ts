@@ -1,7 +1,13 @@
+import { Axiom } from "@axiomhq/js";
 import type { ExecutionContext } from "@cloudflare/workers-types"
+import { Logtail } from "@logtail/edge"
 
 export default {
-    async fetch(request: Request, _env: unknown, _ctx: ExecutionContext) {
+    async fetch(request: Request, env: any, ctx: ExecutionContext) {
+        const axiom = new Axiom({ token: env.AXIOM_TOKEN })
+        const baseLogger = new Logtail(env.BETTER_STACK_TOKEN)
+        const logger = baseLogger.withExecutionContext(ctx)
+
         if (request.method === "OPTIONS") {
             return new Response(null, {
                 status: 204,
@@ -30,9 +36,11 @@ export default {
             const response = await fetch(url, { headers: request.headers })
             const body = await response.text()
             try {
-                console.log(JSON.parse(body))
+                logger.info(JSON.parse(body))
+                axiom.ingest("alienware-arena-proxy", JSON.parse(body))
             } catch {
-                console.log(body)
+                logger.info(body)
+                axiom.ingest("alienware-arena-proxy", { body })
             }
 
             return new Response(body, {
@@ -40,7 +48,7 @@ export default {
                 headers: baseHeaders(),
             })
         } catch (error) {
-            console.error(error)
+            logger.error(error)
             return errorResponse(500, "An error occurred while communicating with Alienware Arena.")
         }
     },
