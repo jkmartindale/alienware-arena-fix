@@ -19,7 +19,7 @@
     "wrangler": "^4.75.0"
   },
   "dependencies": {
-    "@axiomhq/js": "^1.2.0",
+    "@axiomhq/js": "^1.6.0",
     "@logtail/edge": "^0.5.0"
   }
 }
