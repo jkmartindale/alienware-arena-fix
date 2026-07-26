@@ -16,7 +16,7 @@
     "@cloudflare/workers-types": "^4.20240925.0",
     "@types/node": "^16.11.14",
     "typescript": "^4.5.4",
-    "wrangler": "^4.103.0"
+    "wrangler": "^4.114.0"
   },
   "dependencies": {
     "@axiomhq/js": "^1.6.0",
